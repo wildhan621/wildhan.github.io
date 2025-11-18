@@ -119,6 +119,18 @@
 <div class="note">
     PoC Demo Only — No data collected.
 </div>
+<script>
+    window.onload = function() {
+        setTimeout(() => {
+            window.scrollTo(0,1);
+        }, 200);
+    }
+
+    function triggerSpoof() {
+        // Redirect ke domain target
+        location.replace("https://example.com");
+    }
+</script>
 
 </body>
 </html>
