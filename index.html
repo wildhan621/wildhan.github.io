@@ -1,121 +1,109 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Google Sign-In</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+<title>Google Sign-in — Account Picker</title>
 
 <style>
     body {
         margin: 0;
-        padding: 0;
-        font-family: 'Roboto', Arial, sans-serif;
+        font-family: Arial, sans-serif;
         background: #fff;
     }
 
-    .container {
-        max-width: 360px;
-        margin: 60px auto;
-        padding: 24px;
-        border: 1px solid #dadce0;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-    }
-
-    .google-logo {
-        display: block;
-        width: 75px;
-        margin: 0 auto 24px auto;
-    }
-
-    h1 {
-        font-size: 22px;
-        font-weight: 400;
-        margin-bottom: 8px;
-        text-align: left;
-    }
-
-    #userEmail {
-        font-size: 14px;
-        color: #5f6368;
-        margin-bottom: 24px;
-        word-break: break-all;
-    }
-
-    label {
-        font-size: 14px;
-        color: #202124;
-    }
-
-    .password-input {
+    .page {
         width: 100%;
-        padding: 12px;
-        margin-top: 8px;
-        border-radius: 4px;
-        border: 1px solid #dadce0;
-        font-size: 16px;
-        outline: none;
+        height: 100vh;
+        overflow: hidden;
     }
 
-    .password-input:focus {
-        border-color: #1a73e8;
-        box-shadow: 0 0 0 1px #1a73e8;
-    }
-
-    .next-btn {
-        margin-top: 28px;
-        width: 100%;
-        padding: 10px;
-        font-size: 15px;
-        font-weight: 500;
-        background: #1a73e8;
-        color: #fff;
-        border: none;
-        border-radius: 4px;
+    .header {
+        padding: 16px;
+        display: flex;
+        align-items: center;
+        font-size: 20px;
+        font-weight: bold;
+        border-bottom: 1px solid #e0e0e0;
+        gap: 10px;
         cursor: pointer;
     }
 
-    .next-btn:active {
-        opacity: 0.85;
+    .logo {
+        width: 28px;
+        height: 28px;
+    }
+
+    .account-box {
+        margin: 24px;
+        padding: 16px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #ccc;
+    }
+
+    .email-col b {
+        font-size: 15px;
+        color: #202124;
+    }
+
+    .email-col span {
+        font-size: 13px;
+        color: #666;
     }
 
     .note {
         text-align: center;
-        font-size: 12px;
-        margin-top: 20px;
         color: red;
+        margin-top: 40px;
+        font-size: 13px;
     }
 </style>
-</head>
 
+</head>
 <body>
 
-<div class="container">
-    <img class="google-logo" 
-         src="https://www.gstatic.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png">
+<div class="page">
 
-    <h1>Welcome</h1>
+    <div class="header" onclick="goPassword()">
+        <img class="logo" src="https://www.google.com/favicon.ico">
+        Sign in
+    </div>
 
-    <div id="userEmail">loading...</div>
+    <div class="account-box" onclick="goPassword()">
+        <div class="avatar"></div>
 
-    <label>Password</label>
-    <input type="password" class="password-input" placeholder="Enter your password">
+        <div class="email-col">
+            <b id="userEmail">username@example.com</b>
+            <span>Google Account</span>
+        </div>
+    </div>
 
-    <button class="next-btn" onclick="fakeSubmit()">Next</button>
+    <div class="note">PoC Demo — No data collected</div>
 
-    <div class="note">PoC Demo Only — No data collected.</div>
 </div>
 
 <script>
-    // Ambil email dari Page 1
-    const params = new URLSearchParams(window.location.search);
-    const email = params.get("email");
+    // Ambil email dari URL ?email=
+    const url = new URLSearchParams(location.search);
+    const email = url.get("email");
     if (email) {
         document.getElementById("userEmail").textContent = email;
     }
 
-    // Tidak akan pernah ada data yang dikirim
-    function fakeSubmit() {
-        alert("PoC only — This does not collect or send any data.");
+    function goPassword() {
+        const email = document.getElementById("userEmail").textContent;
+        location.href = "password.html?email=" + encodeURIComponent(email);
     }
 </script>
 
