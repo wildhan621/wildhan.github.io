@@ -2,133 +2,120 @@
 <html lang="en">
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-<title>Chrome Android UI Spoofing PoC</title>
+<title>Google Sign-In</title>
 
 <style>
     body {
         margin: 0;
         padding: 0;
-        overflow: hidden;
-        font-family: Arial, sans-serif;
+        font-family: 'Roboto', Arial, sans-serif;
         background: #fff;
     }
 
-    /* Fullscreen fake Chrome background */
-    .fake-page {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100vw;
-        height: 100vh;
-        background: #ffffff;
-        overflow: hidden;
-    }
-
-    /* Header mirip Chrome Android account chooser (Material 3) */
-    .fake-header {
-        width: 100%;
-        padding: 16px;
-        font-size: 20px;
-        font-weight: bold;
-        border-bottom: 1px solid #e0e0e0;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
-
-    .google-logo {
-        width: 28px;
-    }
-
-    /* Fake account selector */
-    .account-box {
-        margin: 24px;
-        padding: 16px;
-        border-radius: 10px;
-        border: 1px solid #ddd;
-        display: flex;
-        align-items: center;
-        gap: 16px;
+    .container {
+        max-width: 360px;
+        margin: 60px auto;
+        padding: 24px;
+        border: 1px solid #dadce0;
+        border-radius: 8px;
         box-shadow: 0 2px 4px rgba(0,0,0,0.05);
     }
 
-    .avatar {
-        width: 40px;
-        height: 40px;
-        border-radius: 50%;
-        background: #ccc;
+    .google-logo {
+        display: block;
+        width: 75px;
+        margin: 0 auto 24px auto;
     }
 
-    /* Hotspot untuk memicu aksi */
-    .hotspot {
-        position: absolute;
-        top: 160px;
-        left: 25px;
-        width: 85%;
-        height: 70px;
-        background: transparent;
-        opacity: 0;
+    h1 {
+        font-size: 22px;
+        font-weight: 400;
+        margin-bottom: 8px;
+        text-align: left;
     }
 
-    /* Informasi demo */
-    .note {
-        position: fixed;
-        bottom: 10px;
+    #userEmail {
+        font-size: 14px;
+        color: #5f6368;
+        margin-bottom: 24px;
+        word-break: break-all;
+    }
+
+    label {
+        font-size: 14px;
+        color: #202124;
+    }
+
+    .password-input {
         width: 100%;
+        padding: 12px;
+        margin-top: 8px;
+        border-radius: 4px;
+        border: 1px solid #dadce0;
+        font-size: 16px;
+        outline: none;
+    }
+
+    .password-input:focus {
+        border-color: #1a73e8;
+        box-shadow: 0 0 0 1px #1a73e8;
+    }
+
+    .next-btn {
+        margin-top: 28px;
+        width: 100%;
+        padding: 10px;
+        font-size: 15px;
+        font-weight: 500;
+        background: #1a73e8;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .next-btn:active {
+        opacity: 0.85;
+    }
+
+    .note {
         text-align: center;
-        font-size: 13px;
+        font-size: 12px;
+        margin-top: 20px;
         color: red;
     }
 </style>
-
 </head>
+
 <body>
 
-<div class="fake-page">
+<div class="container">
+    <img class="google-logo" 
+         src="https://www.gstatic.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png">
 
-    <div class="fake-header">
-        <img class="google-logo" src="https://www.google.com/favicon.ico">
-        Sign in
-    </div>
+    <h1>Welcome</h1>
 
-    <div class="account-box">
-        <div class="avatar"></div>
-        <div style="display:flex;flex-direction:column;">
-            <b>username@example.com</b>
-            <span style="font-size:13px; color:#555;">Google Account</span>
-        </div>
-    </div>
+    <div id="userEmail">loading...</div>
 
-    <!-- HOTSPOT INVISIBLE -->
-    <div class="hotspot" onclick="triggerSpoof()"></div>
+    <label>Password</label>
+    <input type="password" class="password-input" placeholder="Enter your password">
 
+    <button class="next-btn" onclick="fakeSubmit()">Next</button>
+
+    <div class="note">PoC Demo Only — No data collected.</div>
 </div>
 
 <script>
-    // Scroll otomatis untuk menyembunyikan address bar Chrome Android
-    window.onload = function() {
-        setTimeout(() => {
-            window.scrollTo(0,1);   // hide address bar
-        }, 200);
+    // Ambil email dari Page 1
+    const params = new URLSearchParams(window.location.search);
+    const email = params.get("email");
+    if (email) {
+        document.getElementById("userEmail").textContent = email;
     }
 
-    function triggerSpoof() {
-        alert("Demo Triggered: This simulates opening a fake Google login.");
-    }
-</script>
-
-<div class="note">
-    PoC Demo Only — No data collected.
-</div>
-<script>
-    window.onload = function() {
-        setTimeout(() => {
-            window.scrollTo(0,1);
-        }, 200);
-    }
-
-    function triggerSpoof() {
-        // Redirect ke domain target
-        location.replace("https://example.com");
+    // Tidak akan pernah ada data yang dikirim
+    function fakeSubmit() {
+        alert("PoC only — This does not collect or send any data.");
     }
 </script>
 
